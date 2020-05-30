@@ -1,0 +1,10 @@
+{
+  "name": "Frames to Groups",
+  "id": "848551444907255153",
+  "api": "1.0.0",
+  "main": "dist/index.js",
+  "ui": "dist/ui.html",
+  "menu": [
+    {"name": "Convert Frames to Groups", "command": "convertFramesToGroups"}
+  ]
+}
