@@ -1,3 +1,5 @@
+![](img/banner.png)
+
 # Frames to Groups &mdash; Figma Plugin
 
 This is a [Figma](figma.com) plugin that provides an easy way to convert
@@ -7,8 +9,14 @@ This is a [Figma](figma.com) plugin that provides an easy way to convert
 ## How To Use
 
 Select layers and run the command `Convert Frames to Groups` and all
-*Frames* inside the selected layers will be converted to groups.
-If no layers are selected, then all frames on the page will be converted
+*Frames* inside the selected layers will be converted to *Groups*.
+
+Cases:
+- If no layers are selected, then all frames on the page will be converted.
+- If you select a *Frame*, only the inner *Frames* will be converted,
+not the selected one.
+- If a component with the type `Instance` is selected, nothing will be changed inside it. To convert *Frames* inside an *Instance* component
+you should select the source component of this *Instance*.
 
 
 ### Demo
@@ -49,16 +57,13 @@ npm run patch
 ```
 
 
-## TODO
-- Update the artwork
-
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 
 
 ## Credits
-The idea initiator - [Filippos Protogeridis](https://github.com/protogeridis)
+The idea initiator & artwork - [Filippos Protogeridis](https://github.com/protogeridis)
 
 
 
