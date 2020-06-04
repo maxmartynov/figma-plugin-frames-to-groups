@@ -14,12 +14,15 @@ function main (): void {
 }
 
 function convertFramesToGroups (): void {
-  createGroupsFromFrames(selectedItems.length
+  const groups: GroupNode[] = createGroupsFromFrames(selectedItems.length
     ? selectedItems
     : currentPage.children
   )
 
-  figma.closePlugin()
+  figma.closePlugin(groups.length
+    ? `${groups.length} Frames converted`
+    : 'There are no Frames to convert'
+  )
 }
 
 function createGroupFromFrame (frameNode: FrameNode): GroupNode|null {
@@ -35,9 +38,9 @@ function createGroupFromFrame (frameNode: FrameNode): GroupNode|null {
   return group
 }
 
-function createGroupsFromFrames (items: ReadonlyArray<SceneNode>|PageNode[]): FrameNode[] {
-  const frames: FrameNode[] = []
-  if (!items.length) return frames
+function createGroupsFromFrames (items: ReadonlyArray<SceneNode>|PageNode[]): GroupNode[] {
+  const groups: GroupNode[] = []
+  if (!items.length) return groups
 
   for (const node of items) {
     if (typeof (node as any).findAll !== 'function') continue
@@ -47,9 +50,12 @@ function createGroupsFromFrames (items: ReadonlyArray<SceneNode>|PageNode[]): Fr
 
     for (const frame of _frames) {
       const group = createGroupFromFrame(frame)
-      if (group || !frame.children.length) frame.remove()
+      if (group) {
+        groups.push(group)
+        if (!frame.children.length) frame.remove()
+      }
     }
   }
 
-  return frames
+  return groups
 }
