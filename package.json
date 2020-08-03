@@ -1,6 +1,6 @@
 {
   "name": "figma-plugin-frames-to-groups",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Figma plugin that converts frames to groups.",
   "main": "dist/index.js",
   "scripts": {
