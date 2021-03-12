@@ -30,31 +30,44 @@ you should select the source component of this *Instance*.
 ## Development
 
 #### Installation
-```
-npm run install
-```
+
+1. Install dependencies
+
+    ```sh
+    npm run install
+    ```
+
+2. Get the [Figma desktop app](https://www.figma.com/downloads/). At this time, plugin development and testing needs to be done using the Figma desktop app. This is because Figma needs to read your code saved as a local file.
+
+3. Log in to your account and open the file editor in the Figma desktop app.
+
+4. Go to `Menu > Plugins > Development > New Plugin...`. This will bring up the "Create a plugin" modal. Choose the `manifest.json` from this project.
+
 
 #### Watch
 
 Run the watcher that will transpile .ts files into .js files on change
-```
+```sh
 npm run watch
 ```
 
-#### Build
 
-Build for production
-```
-npm run build
-```
+## Publishing
 
-#### Bump the app version
+1. Build for production
 
-```
-npm run bump
-# or
-npm run patch
-```
+    ```sh
+    npm run build
+    ```
+
+2. Bump the app version
+
+    ```sh
+    npm run bump
+    ```
+
+3. Follow to the official guide [Publish plugins to the Figma Community](https://help.figma.com/hc/en-us/articles/360042293394-Publish-plugins-to-the-Figma-Community#Submit_your_plugin)
+
 
 
 ## Contributing
