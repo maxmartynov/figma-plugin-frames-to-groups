@@ -3,7 +3,12 @@
   "id": "848551444907255153",
   "api": "1.0.0",
   "main": "dist/index.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "enablePrivatePluginApi": true,
   "menu": [
-    {"name": "Convert Frames to Groups", "command": "convertFramesToGroups"}
+    {"name": "Convert Frames to Groups", "command": "convertFramesToGroups"},
+    {"name": "Settings", "command": "view:settings"},
+    {"name": "About", "command": "view:about"}
   ]
 }

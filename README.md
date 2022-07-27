@@ -34,7 +34,7 @@ you should select the source component of this *Instance*.
 1. Install dependencies
 
     ```sh
-    npm run install
+    npm install
     ```
 
 2. Get the [Figma desktop app](https://www.figma.com/downloads/). At this time, plugin development and testing needs to be done using the Figma desktop app. This is because Figma needs to read your code saved as a local file.
@@ -48,7 +48,7 @@ you should select the source component of this *Instance*.
 
 Run the watcher that will transpile .ts files into .js files on change
 ```sh
-npm run watch
+npm run dev
 ```
 
 

@@ -1,13 +1,14 @@
 {
   "name": "figma-plugin-frames-to-groups",
   "version": "1.0.1",
-  "description": "Figma plugin that converts frames to groups.",
+  "description": "Figma plugin that converts Frames to Groups.",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "npm run watch",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
-    "bump": "node_modules/.bin/bump prompt --tag --all --push --commit 'v%s'",
-    "patch": "node_modules/.bin/bump patch --tag --all --push --commit 'v%s'",
+    "bump": "npx bump prompt --tag --all --push --commit 'v%s'",
+    "patch": "npx bump patch --tag --all --push --commit 'v%s'",
     "version": "echo 'Building before bump...' && npm run build"
   },
   "keywords": [
@@ -27,12 +28,22 @@
     "url": "https://github.com/maxmartynov/figma-plugin-frames-to-groups/issues"
   },
   "homepage": "https://github.com/maxmartynov/figma-plugin-frames-to-groups/#readme",
+  "dependencies": {
+    "vue": "^2.6.10"
+  },
   "devDependencies": {
-    "@figma/plugin-typings": "^1.15.0",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.8.3",
+    "@figma/plugin-typings": "^1.19.2",
+    "css-loader": "^3.5.2",
+    "html-webpack-inline-source-plugin": "^1.0.0-beta.2",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^8.4.0",
+    "typescript": "^4.7.4",
+    "url-loader": "^4.1.1",
     "version-bump-prompt": "^6.0.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.6.0"
   }
 }

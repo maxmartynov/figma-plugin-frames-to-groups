@@ -3,10 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: [
-    'plugin:vue/essential',
-    'eslint:recommended'
-  ],
+  extends: ['plugin:vue/essential', 'eslint:recommended'],
   parserOptions: {
     parser: 'babel-eslint',
   },
@@ -22,6 +19,6 @@ module.exports = {
     'no-useless-escape': 'off',
     'no-prototype-builtins': 'off',
     'no-unused-vars': 'off',
-    'object-curly-spacing': 'off'
-  }
-};
+    'object-curly-spacing': 'off',
+  },
+}
