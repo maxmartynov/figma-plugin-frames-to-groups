@@ -14,7 +14,7 @@ import Vue from 'vue'
 import {PluginEvent} from '../types/PluginEvent'
 import AboutComponent from './components/About.component.vue'
 import SettingsComponent from './components/Settings.component.vue'
-import {SettingsMap} from '../types/SettingsMap'
+import {SettingsMap, settingsMapDefaults} from '../types/SettingsMap'
 
 const postMessage = (event: PluginEvent) =>
   parent.postMessage({pluginMessage: event}, '*')
@@ -41,7 +41,7 @@ export default Vue.extend({
       switch (event.type) {
         case 'view:settings': {
           this.contentComponent = SettingsComponent
-          this.settings = event.settings || {}
+          this.settings = Object.assign({}, settingsMapDefaults, event.settings)
           break
         }
         case 'view:about': {
@@ -59,9 +59,8 @@ export default Vue.extend({
       })
       postMessage({
         type: 'message',
-        text: `Saved. File key: ${this.fileId}`,
+        text: 'Saved',
       })
-      this.close()
     },
     close() {
       postMessage({type: 'cancel'})

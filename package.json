@@ -7,9 +7,12 @@
     "dev": "npm run watch",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
-    "bump": "npx bump prompt --tag --all --push --commit 'v%s'",
-    "patch": "npx bump patch --tag --all --push --commit 'v%s'",
-    "version": "echo 'Building before bump...' && npm run build"
+    "check:master": "if git branch --show-current | grep ^master$ > /dev/null; then echo 'Git branch: master'; else echo 'Not in the master branch' 1>&2 && exit 1; fi",
+    "prerelease": "npm run check:master",
+    "release": "bash ./utils/release.sh",
+    "patch": "npm run release -- patch",
+    "minor": "npm run release -- minor",
+    "major": "npm run release -- major"
   },
   "keywords": [
     "figma",
@@ -40,7 +43,6 @@
     "ts-loader": "^8.4.0",
     "typescript": "^4.7.4",
     "url-loader": "^4.1.1",
-    "version-bump-prompt": "^6.0.3",
     "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^5.74.0",

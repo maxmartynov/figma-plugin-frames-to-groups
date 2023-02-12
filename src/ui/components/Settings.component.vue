@@ -2,7 +2,7 @@
   <div class="settings-component">
     <h2 style="color: #444; margin-top: 0">Settings</h2>
 
-    <p class="input-group">
+    <!-- <p class="input-group">
       <label for="emptyFrames">Empty Frames:</label>
       <select
         id="emptyFrames"
@@ -15,56 +15,29 @@
           v-text="value"
         ></option>
       </select>
-    </p>
-
-    <!-- <p>
-      In order for this plugin to work, you will need to provide the file link
-      (URL) below. You only have to do this once.
-      <a @click.prevent="toggleInfo"> Where do I find this? </a>
-    </p>
+    </p> -->
 
     <p class="input-group">
-      <label for="input">File link:</label>
-      <input
-        id="input"
-        :class="{error: !inputValue || errorMsg}"
-        v-model="inputValue"
-        @keypress.enter="onClickOk"
-      />
-      <span class="error-hint" v-if="errorMsg">{{ errorMsg }}</span>
+      <label for="rootFrame">Root selected Frame:</label>
+      <select id="rootFrame" v-model="settings.rootFrame" @change="onChange()">
+        <option
+          v-for="(label, id) of RootFrameActions"
+          :key="id"
+          :value="id"
+          v-text="label"
+        ></option>
+      </select>
     </p>
-
- -->
-
-    <!-- <div class="info-block" :class="{open: isInfoOpen}">
-      <p class="text">
-        You can get the file link by opening the <b>Share</b> window and then
-        clicking on <b>Copy link</b>
-      </p>
-
-      <div class="img-wrapper">
-        <img src="../../../img/copy-link-screenshot.png" alt="Screenshot" />
-      </div>
-
-      <div class="buttons-block">
-        <button @click="toggleInfo" tabindex="3">I've got it</button>
-      </div>
-    </div> -->
-
-    <!-- <div class="buttons-block">
-      <button @click="onClickOk" :disabled="!inputValue">Save</button>
-    </div> -->
-
-    <!-- <p class="text-small">
-      The file URL is saved in your file safely. It’s not sent to any external
-      server.
-    </p> -->
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import {EmptyFramesActions, SettingsMap} from '../../types/SettingsMap'
+import {
+  EmptyFramesActions,
+  RootFrameActions,
+  SettingsMap,
+} from '../../types/SettingsMap'
 
 export default Vue.extend({
   name: 'SettingsComponent',
@@ -77,7 +50,14 @@ export default Vue.extend({
   data() {
     return {
       errorMsg: '',
-      EmptyFramesActions: Object.keys(EmptyFramesActions),
+      EmptyFramesActions: {
+        [EmptyFramesActions.remove]: 'Remove (default)',
+        [EmptyFramesActions.turnIntoRectangle]: 'Turn into rectangle',
+      },
+      RootFrameActions: {
+        [RootFrameActions.leaveFrame]: 'Leave as Frame (default)',
+        [RootFrameActions.turnIntoGroup]: 'Turn into a Group',
+      },
     }
   },
   methods: {

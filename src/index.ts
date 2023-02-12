@@ -3,7 +3,11 @@ import {
   PluginEventAbout,
   PluginEventSettings,
 } from './types/PluginEvent'
-import {SettingsMap, settingsMapDefaults} from './types/SettingsMap'
+import {
+  RootFrameActions,
+  SettingsMap,
+  settingsMapDefaults,
+} from './types/SettingsMap'
 
 const currentPage: PageNode = figma.currentPage
 const selectedItems: ReadonlyArray<SceneNode> = currentPage.selection
@@ -48,8 +52,8 @@ function openWindow(
     }
     case 'view:about': {
       figma.showUI(__html__, {
-        width: 282,
-        height: 380,
+        width: 320,
+        height: 460,
       })
       figma.ui.postMessage({type: eventType} as PluginEvent, {origin: '*'})
       break
@@ -77,25 +81,29 @@ function getPluginSettingsMap(): SettingsMap {
     root.getPluginData(key) as SettingsMap[T]
   return Object.assign<SettingsMap, SettingsMap>(settingsMapDefaults, {
     createRectangleForFrame: get('createRectangleForFrame'),
+    // TODO: not in use
     emptyFrames: get('emptyFrames'),
+    rootFrame: get('rootFrame'),
   })
 }
 
 function patchPluginSettingsMap(settings: SettingsMap): void {
   const newSettings = Object.assign(settingsMapDefaults, settings)
-  for (const key in Object.keys(settingsMapDefaults)) {
+  for (const key of Object.keys(settingsMapDefaults)) {
     root.setPluginData(key, String(newSettings[key]))
   }
 }
 
 function convertFramesToGroups(): void {
+  const settings = getPluginSettingsMap()
   const groups: GroupNode[] = createGroupsFromFrames(
-    selectedItems.length ? selectedItems : currentPage.children
+    selectedItems.length ? selectedItems : currentPage.children,
+    settings
   )
 
   figma.closePlugin(
     groups.length
-      ? `${groups.length} Frames converted`
+      ? `${groups.length} Frame(s) converted`
       : 'There are no Frames to convert'
   )
 }
@@ -115,7 +123,8 @@ function createGroupFromFrame(frameNode: FrameNode): GroupNode | null {
 }
 
 function createGroupsFromFrames(
-  items: ReadonlyArray<SceneNode> | PageNode[]
+  items: ReadonlyArray<SceneNode> | PageNode[],
+  settings: SettingsMap
 ): GroupNode[] {
   const groups: GroupNode[] = []
   if (!items.length) return groups
@@ -132,6 +141,17 @@ function createGroupsFromFrames(
       if (group) {
         groups.push(group)
         if (!frame.children.length) frame.remove()
+      }
+    }
+
+    if (
+      node.type === 'FRAME' &&
+      settings.rootFrame === RootFrameActions.turnIntoGroup
+    ) {
+      const group = createGroupFromFrame(node)
+      if (group) {
+        groups.push(group)
+        if (!node.children.length) node.remove()
       }
     }
   }
