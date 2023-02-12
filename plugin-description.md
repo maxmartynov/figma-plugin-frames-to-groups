@@ -10,6 +10,10 @@ Select layers and run the command 'Convert Frames to Groups' and all Frames insi
 - If you select a Frame, only the inner Frames will be converted, not the selected one.
 - If a component with the type 'Instance' is selected, nothing will be changed inside it. To convert Frames inside an Instance component you should select the source component of this Instance.
 
+# Demo Video
+
+[link to the file](https://github.com/maxmartynov/figma-plugin-frames-to-groups/blob/master/img/demo.gif) (gif)
+
 # Support
 
 Plugin creation fueled by coffee — [buy me a cuppa](https://github.com/maxmartynov/figma-plugin-frames-to-groups#support).
