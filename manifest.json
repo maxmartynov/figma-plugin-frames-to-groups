@@ -6,6 +6,10 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "enablePrivatePluginApi": true,
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  },
   "menu": [
     {"name": "Convert Frames to Groups", "command": "convertFramesToGroups"},
     {
