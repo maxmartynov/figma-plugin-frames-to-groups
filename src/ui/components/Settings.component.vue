@@ -28,6 +28,22 @@
         ></option>
       </select>
     </p>
+
+    <p class="input-group">
+      <label for="convertInnerFrames">Inner Frames:</label>
+      <select
+        id="convertInnerFrames"
+        v-model="settings.convertInnerFrames"
+        @change="onChange()"
+      >
+        <option
+          v-for="(label, id) of ConvertInnerFramesActions"
+          :key="id"
+          :value="id"
+          v-text="label"
+        ></option>
+      </select>
+    </p>
   </div>
 </template>
 
@@ -37,6 +53,7 @@ import {
   EmptyFramesActions,
   RootFrameActions,
   SettingsMap,
+  YesNo,
 } from '../../types/SettingsMap'
 
 export default Vue.extend({
@@ -56,7 +73,11 @@ export default Vue.extend({
       },
       RootFrameActions: {
         [RootFrameActions.leaveFrame]: 'Leave as Frame (default)',
-        [RootFrameActions.turnIntoGroup]: 'Turn into a Group',
+        [RootFrameActions.turnIntoGroup]: 'Turn into Group',
+      },
+      ConvertInnerFramesActions: {
+        [YesNo.yes]: 'Turn into Groups (default)',
+        [YesNo.no]: 'Leave as Frames',
       },
     }
   },

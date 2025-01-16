@@ -4,6 +4,10 @@ export interface PluginEventConvertFramesToGroups {
   type: 'convertFramesToGroups'
 }
 
+export interface PluginEventConvertRootFrameToGroup {
+  type: 'convertRootFrameToGroup'
+}
+
 export interface PluginEventSettings {
   type: 'view:settings'
   settings: SettingsMap
@@ -29,6 +33,7 @@ export interface PluginEventMessage {
 
 export type PluginEvent =
   | PluginEventConvertFramesToGroups
+  | PluginEventConvertRootFrameToGroup
   | PluginEventSettings
   | PluginEventSaveSettings
   | PluginEventAbout

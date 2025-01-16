@@ -7,6 +7,7 @@ import {
   RootFrameActions,
   SettingsMap,
   settingsMapDefaults,
+  YesNo,
 } from './types/SettingsMap'
 
 const currentPage: PageNode = figma.currentPage
@@ -19,6 +20,9 @@ function main(): void {
   switch (figma.command as PluginEvent['type']) {
     case 'convertFramesToGroups': {
       return convertFramesToGroups()
+    }
+    case 'convertRootFrameToGroup': {
+      return convertRootFrameToGroup()
     }
     case 'view:settings': {
       return openWindow('view:settings')
@@ -78,13 +82,17 @@ function openWindow(
 
 function getPluginSettingsMap(): SettingsMap {
   const get = <T extends keyof SettingsMap>(key: T) =>
-    root.getPluginData(key) as SettingsMap[T]
-  return Object.assign<SettingsMap, SettingsMap>(settingsMapDefaults, {
-    createRectangleForFrame: get('createRectangleForFrame'),
+    (root.getPluginData(key) as SettingsMap[T]) || undefined
+  return {
+    createRectangleForFrame:
+      get('createRectangleForFrame') ||
+      settingsMapDefaults.createRectangleForFrame,
     // TODO: not in use
-    emptyFrames: get('emptyFrames'),
-    rootFrame: get('rootFrame'),
-  })
+    emptyFrames: get('emptyFrames') || settingsMapDefaults.emptyFrames,
+    rootFrame: get('rootFrame') || settingsMapDefaults.rootFrame,
+    convertInnerFrames:
+      get('convertInnerFrames') || settingsMapDefaults.convertInnerFrames,
+  }
 }
 
 function patchPluginSettingsMap(settings: SettingsMap): void {
@@ -99,6 +107,24 @@ function convertFramesToGroups(): void {
   const groups: GroupNode[] = createGroupsFromFrames(
     selectedItems.length ? selectedItems : currentPage.children,
     settings
+  )
+
+  figma.closePlugin(
+    groups.length
+      ? `${groups.length} Frame(s) converted`
+      : 'There are no Frames to convert'
+  )
+}
+
+function convertRootFrameToGroup(): void {
+  const settings = getPluginSettingsMap()
+  const groups: GroupNode[] = createGroupsFromFrames(
+    selectedItems.length ? selectedItems : currentPage.children,
+    {
+      ...settings,
+      rootFrame: RootFrameActions.turnIntoGroup,
+      convertInnerFrames: YesNo.no,
+    }
   )
 
   figma.closePlugin(
@@ -132,15 +158,18 @@ function createGroupsFromFrames(
   for (const node of items) {
     if (typeof (node as any).findAll !== 'function') continue
 
-    const _frames: FrameNode[] = (node as any).findAll(
-      (n: BaseNode) => n.type === 'FRAME'
-    )
+    console.log('settings.convertInnerFrames: ', settings.convertInnerFrames)
+    if (settings.convertInnerFrames === YesNo.yes) {
+      const _frames: FrameNode[] = (node as any).findAll(
+        (n: BaseNode) => n.type === 'FRAME'
+      )
 
-    for (const frame of _frames) {
-      const group = createGroupFromFrame(frame)
-      if (group) {
-        groups.push(group)
-        if (!frame.children.length) frame.remove()
+      for (const frame of _frames) {
+        const group = createGroupFromFrame(frame)
+        if (group) {
+          groups.push(group)
+          if (!frame.children.length) frame.remove()
+        }
       }
     }
 

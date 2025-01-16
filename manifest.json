@@ -8,6 +8,10 @@
   "enablePrivatePluginApi": true,
   "menu": [
     {"name": "Convert Frames to Groups", "command": "convertFramesToGroups"},
+    {
+      "name": "Convert only Root Frame to Group",
+      "command": "convertRootFrameToGroup"
+    },
     {"name": "Settings", "command": "view:settings"},
     {"name": "About", "command": "view:about"}
   ]

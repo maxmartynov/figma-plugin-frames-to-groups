@@ -20,10 +20,12 @@ export interface SettingsMap {
   createRectangleForFrame: YesNo
   emptyFrames: EmptyFramesActions
   rootFrame: RootFrameActions
+  convertInnerFrames: YesNo
 }
 
 export const settingsMapDefaults: SettingsMap = {
   createRectangleForFrame: YesNo.no,
   emptyFrames: EmptyFramesActions.remove,
   rootFrame: RootFrameActions.leaveFrame,
+  convertInnerFrames: YesNo.yes,
 }
