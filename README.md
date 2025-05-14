@@ -9,7 +9,13 @@ This is a [Figma](figma.com) plugin that provides an easy way to convert _Frames
 Select layers and run the command `Convert Frames to Groups` and all
 _Frames_ inside the selected layers will be converted to _Groups_.
 
-Cases:
+## Features
+
+- Preserves frame background colors and corner radii when converting to groups
+- Compatible with Lottie animations export
+- Configurable settings to control conversion behavior
+
+## Cases
 
 - If no layers are selected, then all frames on the page will be converted.
 - If you select a _Frame_, only the inner _Frames_ will be converted,

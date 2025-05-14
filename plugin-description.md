@@ -4,6 +4,12 @@ This is a plugin that provides an easy way to convert Frames to Groups.
 
 Select layers and run the command 'Convert Frames to Groups' and all Frames inside the selected layers will be converted to Groups.
 
+# Features
+
+- Preserves frame background colors and corner radii when converting to groups
+- Compatible with Lottie animations export
+- Configurable settings to control conversion behavior
+
 # Cases
 
 - If no layers are selected, then all frames on the page will be converted.

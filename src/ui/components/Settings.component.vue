@@ -44,6 +44,22 @@
         ></option>
       </select>
     </p>
+
+    <p class="input-group">
+      <label for="createRectangleForFrame">Preserve Frame Background:</label>
+      <select
+        id="createRectangleForFrame"
+        v-model="settings.createRectangleForFrame"
+        @change="onChange()"
+      >
+        <option
+          v-for="(label, id) of PreserveBackgroundActions"
+          :key="id"
+          :value="id"
+          v-text="label"
+        ></option>
+      </select>
+    </p>
   </div>
 </template>
 
@@ -78,6 +94,10 @@ export default Vue.extend({
       ConvertInnerFramesActions: {
         [YesNo.yes]: 'Turn into Groups (default)',
         [YesNo.no]: 'Leave as Frames',
+      },
+      PreserveBackgroundActions: {
+        [YesNo.yes]: 'Create background rectangle (default)',
+        [YesNo.no]: 'No frame background',
       },
     }
   },

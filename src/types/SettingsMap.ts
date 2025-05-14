@@ -24,7 +24,7 @@ export interface SettingsMap {
 }
 
 export const settingsMapDefaults: SettingsMap = {
-  createRectangleForFrame: YesNo.no,
+  createRectangleForFrame: YesNo.yes,
   emptyFrames: EmptyFramesActions.remove,
   rootFrame: RootFrameActions.leaveFrame,
   convertInnerFrames: YesNo.yes,
