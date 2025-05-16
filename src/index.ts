@@ -144,8 +144,10 @@ function createGroupFromFrame(
   settings: SettingsMap
 ): GroupNode | null {
   if (!frameNode || !frameNode.parent) return null
-  if (!Array.isArray(frameNode.children) || !frameNode.children.length)
-    return null
+
+  const isEmpty =
+    !Array.isArray(frameNode.children) || !frameNode.children.length
+  if (isEmpty) return null
 
   const parent: any = frameNode.parent
   if (parent.type === 'INSTANCE') return null
@@ -179,6 +181,11 @@ function createGroupFromFrame(
       rect.bottomRightRadius = frameNode.bottomRightRadius || 0
     }
 
+    if (frameNode.cornerSmoothing) {
+      hasStyles = true
+      rect.cornerSmoothing = frameNode.cornerSmoothing
+    }
+
     // Copy background color from frame to rectangle
     if (
       frameNode.fills &&
@@ -187,6 +194,12 @@ function createGroupFromFrame(
     ) {
       hasStyles = true
       rect.fills = JSON.parse(JSON.stringify(frameNode.fills))
+      rect.fillStyleId = frameNode.fillStyleId
+    }
+
+    if (frameNode.fillStyleId) {
+      hasStyles = true
+      rect.fillStyleId = frameNode.fillStyleId
     }
 
     // Copy stroke/border properties if they exist
@@ -201,7 +214,28 @@ function createGroupFromFrame(
       rect.strokeAlign = frameNode.strokeAlign
       rect.strokeCap = frameNode.strokeCap
       rect.strokeJoin = frameNode.strokeJoin
+      rect.strokeMiterLimit = frameNode.strokeMiterLimit
       rect.dashPattern = frameNode.dashPattern
+    }
+
+    if (frameNode.strokeStyleId) {
+      hasStyles = true
+      rect.strokeStyleId = frameNode.strokeStyleId
+    }
+
+    // Copy effects if they exist
+    if (
+      frameNode.effects &&
+      Array.isArray(frameNode.effects) &&
+      frameNode.effects.length > 0
+    ) {
+      hasStyles = true
+      rect.effects = JSON.parse(JSON.stringify(frameNode.effects))
+    }
+
+    if (frameNode.effectStyleId) {
+      hasStyles = true
+      rect.effectStyleId = frameNode.effectStyleId
     }
 
     // Add the rectangle as the first child in the group (background)
@@ -212,6 +246,19 @@ function createGroupFromFrame(
       rect.resize(frameNode.width, frameNode.height)
       rect.x = frameNode.x
       rect.y = frameNode.y
+      rect.rotation = frameNode.rotation
+
+      // Copy layout properties
+      rect.layoutAlign = frameNode.layoutAlign
+      rect.layoutGrow = frameNode.layoutGrow
+
+      // Copy visibility properties
+      rect.visible = frameNode.visible
+      rect.locked = frameNode.locked
+      rect.opacity = frameNode.opacity
+      rect.blendMode = frameNode.blendMode
+      rect.isMask = frameNode.isMask
+
       group.insertChild(0, rect)
     } else {
       rect.remove()
