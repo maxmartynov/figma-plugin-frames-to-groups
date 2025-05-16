@@ -123,7 +123,7 @@ function convertFramesToGroups(): void {
   figma.closePlugin(
     groups.length
       ? `${groups.length} Frame(s) converted`
-      : 'There are no Frames to convert'
+      : 'There are no Frames to convert or they are empty'
   )
 }
 
