@@ -43,8 +43,8 @@ function openWindow(
   switch (eventType) {
     case 'view:settings': {
       figma.showUI(__html__, {
-        width: 295,
-        height: 320,
+        width: 320,
+        height: 330,
       })
       figma.ui.postMessage(
         {

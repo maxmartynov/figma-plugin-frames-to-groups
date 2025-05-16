@@ -17,8 +17,8 @@
         ></option>
       </select>
     </p>
-    <p v-if="settings.childlessFrames === ChildlessFrameActions.auto">
-      Turn into rectangle if has styles, otherwise remove
+    <p v-if="settings.childlessFrames === 'auto'">
+      Convert to rectangle if styled, else remove
     </p>
 
     <p class="input-group">
