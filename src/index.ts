@@ -4,6 +4,7 @@ import {
   PluginEventSettings,
 } from './types/PluginEvent'
 import {
+  ChildlessFrameActions,
   RootFrameActions,
   SettingsMap,
   settingsMapDefaults,
@@ -43,7 +44,7 @@ function openWindow(
     case 'view:settings': {
       figma.showUI(__html__, {
         width: 295,
-        height: 285,
+        height: 320,
       })
       figma.ui.postMessage(
         {
@@ -74,8 +75,13 @@ function openWindow(
     } else if (event.type === 'save:settings') {
       patchPluginSettingsMap(event.settings)
       return
+    } else if (event.type === 'view:about') {
+      openWindow('view:about')
+      return
+    } else if (event.type === 'view:settings') {
+      openWindow('view:settings')
+      return
     }
-
     figma.closePlugin()
   }
 }
@@ -90,8 +96,8 @@ function getPluginSettingsMap(): SettingsMap {
     createRectangleForFrame:
       get('createRectangleForFrame') ||
       settingsMapDefaults.createRectangleForFrame,
-    // TODO: not in use
-    emptyFrames: get('emptyFrames') || settingsMapDefaults.emptyFrames,
+    childlessFrames:
+      get('childlessFrames') || settingsMapDefaults.childlessFrames,
     rootFrame: get('rootFrame') || settingsMapDefaults.rootFrame,
     convertInnerFrames:
       get('convertInnerFrames') || settingsMapDefaults.convertInnerFrames,
@@ -147,18 +153,20 @@ function createGroupFromFrame(
 
   const isEmpty =
     !Array.isArray(frameNode.children) || !frameNode.children.length
-  if (isEmpty) return null
+
+  if (isEmpty && settings.childlessFrames === ChildlessFrameActions.remove) {
+    return null
+  }
 
   const parent: any = frameNode.parent
   if (parent.type === 'INSTANCE') return null
 
-  const group: GroupNode = figma.group(frameNode.children, parent)
-  if (frameNode.name) group.name = frameNode.name
+  let group: GroupNode | null = null
 
   // Create a background rectangle if enabled in settings
   if (settings.createRectangleForFrame === YesNo.yes) {
     let hasStyles = false
-    const rect = figma.createRectangle()
+    const bgRect = figma.createRectangle()
 
     // Copy corner radius from frame to rectangle
     if (
@@ -166,7 +174,7 @@ function createGroupFromFrame(
       frameNode.cornerRadius > 0
     ) {
       hasStyles = true
-      rect.cornerRadius = frameNode.cornerRadius
+      bgRect.cornerRadius = frameNode.cornerRadius
     } else if (
       frameNode.topLeftRadius ||
       frameNode.topRightRadius ||
@@ -175,15 +183,15 @@ function createGroupFromFrame(
     ) {
       // Apply individual corner radii if they exist
       hasStyles = true
-      rect.topLeftRadius = frameNode.topLeftRadius || 0
-      rect.topRightRadius = frameNode.topRightRadius || 0
-      rect.bottomLeftRadius = frameNode.bottomLeftRadius || 0
-      rect.bottomRightRadius = frameNode.bottomRightRadius || 0
+      bgRect.topLeftRadius = frameNode.topLeftRadius || 0
+      bgRect.topRightRadius = frameNode.topRightRadius || 0
+      bgRect.bottomLeftRadius = frameNode.bottomLeftRadius || 0
+      bgRect.bottomRightRadius = frameNode.bottomRightRadius || 0
     }
 
     if (frameNode.cornerSmoothing) {
       hasStyles = true
-      rect.cornerSmoothing = frameNode.cornerSmoothing
+      bgRect.cornerSmoothing = frameNode.cornerSmoothing
     }
 
     // Copy background color from frame to rectangle
@@ -193,13 +201,12 @@ function createGroupFromFrame(
       frameNode.fills.length > 0
     ) {
       hasStyles = true
-      rect.fills = JSON.parse(JSON.stringify(frameNode.fills))
-      rect.fillStyleId = frameNode.fillStyleId
+      bgRect.fills = JSON.parse(JSON.stringify(frameNode.fills))
     }
 
     if (frameNode.fillStyleId) {
       hasStyles = true
-      rect.fillStyleId = frameNode.fillStyleId
+      bgRect.setFillStyleIdAsync(String(frameNode.fillStyleId))
     }
 
     // Copy stroke/border properties if they exist
@@ -209,18 +216,18 @@ function createGroupFromFrame(
       frameNode.strokes.length > 0
     ) {
       hasStyles = true
-      rect.strokes = JSON.parse(JSON.stringify(frameNode.strokes))
-      rect.strokeWeight = frameNode.strokeWeight
-      rect.strokeAlign = frameNode.strokeAlign
-      rect.strokeCap = frameNode.strokeCap
-      rect.strokeJoin = frameNode.strokeJoin
-      rect.strokeMiterLimit = frameNode.strokeMiterLimit
-      rect.dashPattern = frameNode.dashPattern
+      bgRect.strokes = JSON.parse(JSON.stringify(frameNode.strokes))
+      bgRect.strokeWeight = frameNode.strokeWeight
+      bgRect.strokeAlign = frameNode.strokeAlign
+      bgRect.strokeCap = frameNode.strokeCap
+      bgRect.strokeJoin = frameNode.strokeJoin
+      bgRect.strokeMiterLimit = frameNode.strokeMiterLimit
+      bgRect.dashPattern = frameNode.dashPattern
     }
 
     if (frameNode.strokeStyleId) {
       hasStyles = true
-      rect.strokeStyleId = frameNode.strokeStyleId
+      bgRect.setStrokeStyleIdAsync(frameNode.strokeStyleId)
     }
 
     // Copy effects if they exist
@@ -230,38 +237,51 @@ function createGroupFromFrame(
       frameNode.effects.length > 0
     ) {
       hasStyles = true
-      rect.effects = JSON.parse(JSON.stringify(frameNode.effects))
+      bgRect.effects = JSON.parse(JSON.stringify(frameNode.effects))
     }
 
     if (frameNode.effectStyleId) {
       hasStyles = true
-      rect.effectStyleId = frameNode.effectStyleId
+      bgRect.setEffectStyleIdAsync(frameNode.effectStyleId)
     }
 
     // Add the rectangle as the first child in the group (background)
     if (hasStyles) {
-      rect.name = frameNode.name
+      bgRect.name = frameNode.name
         ? `${frameNode.name} Background`
         : 'Frame Background'
-      rect.resize(frameNode.width, frameNode.height)
-      rect.x = frameNode.x
-      rect.y = frameNode.y
-      rect.rotation = frameNode.rotation
+      bgRect.resize(frameNode.width, frameNode.height)
+      bgRect.x = frameNode.x
+      bgRect.y = frameNode.y
+      bgRect.rotation = frameNode.rotation
 
       // Copy layout properties
-      rect.layoutAlign = frameNode.layoutAlign
-      rect.layoutGrow = frameNode.layoutGrow
+      bgRect.layoutAlign = frameNode.layoutAlign
+      bgRect.layoutGrow = frameNode.layoutGrow
 
       // Copy visibility properties
-      rect.visible = frameNode.visible
-      rect.locked = frameNode.locked
-      rect.opacity = frameNode.opacity
-      rect.blendMode = frameNode.blendMode
-      rect.isMask = frameNode.isMask
+      bgRect.visible = frameNode.visible
+      bgRect.locked = frameNode.locked
+      bgRect.opacity = frameNode.opacity
+      bgRect.blendMode = frameNode.blendMode
+      bgRect.isMask = frameNode.isMask
 
-      group.insertChild(0, rect)
+      const frameChildren = frameNode.children
+
+      if (frameChildren.length) {
+        group = figma.group(frameNode.children, parent)
+        group.insertChild(0, bgRect)
+      } else {
+        bgRect.x = 0
+        bgRect.y = 0
+        bgRect.rotation = 0
+        frameNode.insertChild(0, bgRect)
+        group = figma.group(frameNode.children, parent)
+      }
+
+      if (frameNode.name) group.name = frameNode.name
     } else {
-      rect.remove()
+      bgRect.remove()
     }
   }
 
@@ -285,10 +305,8 @@ function createGroupsFromFrames(
 
       for (const frame of _frames) {
         const group = createGroupFromFrame(frame, settings)
-        if (group) {
-          groups.push(group)
-          if (!frame.children.length) frame.remove()
-        }
+        if (group) groups.push(group)
+        frame.remove()
       }
     }
 

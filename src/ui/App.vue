@@ -5,6 +5,8 @@
       :is="contentComponent"
       :settings="settings"
       @save:settings="onSaveSettings"
+      @view:settings="onViewSettings"
+      @view:about="onViewAbout"
     />
   </div>
 </template>
@@ -61,6 +63,15 @@ export default Vue.extend({
         type: 'message',
         text: 'Saved',
       })
+    },
+    onViewSettings() {
+      postMessage({
+        type: 'view:settings',
+        settings: this.settings,
+      })
+    },
+    onViewAbout() {
+      postMessage({type: 'view:about'})
     },
     close() {
       postMessage({type: 'cancel'})

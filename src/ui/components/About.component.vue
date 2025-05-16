@@ -12,9 +12,7 @@
       <h3>Credits</h3>
 
       <div style="display: inline-block; width: 49%; vertical-align: middle">
-        The idea initiator
-        <br />
-        & artwork
+        Idea & artwork
         <br />
         <a href="https://www.protogeridis.com" target="_blank">
           Filippos Protogeridis
@@ -50,7 +48,20 @@
     </div>
 
     <div class="footer">
-      <div class="version">v{{ version }}</div>
+      <a
+        href="#settings"
+        @click.prevent="openSettings()"
+        style="
+          display: inline-block;
+          width: 49%;
+          padding-left: 5px;
+          box-sizing: border-box;
+        "
+      >
+        Settings
+      </a>
+
+      <span class="version" style="width: 49%">v{{ version }}</span>
     </div>
   </div>
 </template>
@@ -66,6 +77,11 @@ export default Vue.extend({
       version: packageJSON.version,
       supportLink: packageJSON.bugs.url,
     }
+  },
+  methods: {
+    openSettings() {
+      this.$emit('view:settings')
+    },
   },
 })
 </script>
@@ -99,15 +115,14 @@ export default Vue.extend({
   width: 100%;
   height: var(--footer-height);
   z-index: 7;
-  text-align: right;
-  pointer-events: none;
+  box-sizing: border-box;
+  padding: 0 5px;
 }
 .about-component .footer .version {
   display: inline-block;
-  padding: 0 5px;
   font-weight: 500;
   font-size: 10px;
   line-height: var(--footer-height);
-  pointer-events: all;
+  text-align: right;
 }
 </style>

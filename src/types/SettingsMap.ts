@@ -3,10 +3,11 @@ export enum YesNo {
   'no' = 'no',
 }
 
-// TODO: not in use
-// TODO: Use this code to copy a frame's props
-// https://www.youtube.com/watch?v=hB4P00BWf3E
-export enum EmptyFramesActions {
+export enum ChildlessFrameActions {
+  // - if has styles or children - turn into rectangle
+  // - else - remove
+  'auto' = 'auto',
+
   'remove' = 'remove',
   'turnIntoRectangle' = 'turnIntoRectangle',
 }
@@ -18,14 +19,14 @@ export enum RootFrameActions {
 
 export interface SettingsMap {
   createRectangleForFrame: YesNo
-  emptyFrames: EmptyFramesActions
+  childlessFrames: ChildlessFrameActions
   rootFrame: RootFrameActions
   convertInnerFrames: YesNo
 }
 
 export const settingsMapDefaults: SettingsMap = {
   createRectangleForFrame: YesNo.yes,
-  emptyFrames: EmptyFramesActions.remove,
+  childlessFrames: ChildlessFrameActions.auto,
   rootFrame: RootFrameActions.leaveFrame,
   convertInnerFrames: YesNo.yes,
 }

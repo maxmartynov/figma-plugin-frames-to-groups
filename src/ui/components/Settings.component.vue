@@ -2,20 +2,24 @@
   <div class="settings-component">
     <h2 style="color: #444; margin-top: 0">Settings</h2>
 
-    <!-- <p class="input-group">
-      <label for="emptyFrames">Empty Frames:</label>
+    <p class="input-group">
+      <label for="childlessFrames">Childless Frames:</label>
       <select
-        id="emptyFrames"
-        v-model="settings.emptyFrames"
+        id="childlessFrames"
+        v-model="settings.childlessFrames"
         @change="onChange()"
       >
         <option
-          v-for="value of EmptyFramesActions"
-          :key="value"
-          v-text="value"
+          v-for="(label, id) of ChildlessFrameActions"
+          :key="id"
+          :value="id"
+          v-text="label"
         ></option>
       </select>
-    </p> -->
+    </p>
+    <p v-if="settings.childlessFrames === ChildlessFrameActions.auto">
+      Turn into rectangle if has styles, otherwise remove
+    </p>
 
     <p class="input-group">
       <label for="rootFrame">Root selected Frame:</label>
@@ -60,17 +64,35 @@
         ></option>
       </select>
     </p>
+
+    <div class="footer">
+      <a
+        href="#about"
+        @click.prevent="openAbout()"
+        style="
+          display: inline-block;
+          width: 49%;
+          padding-left: 5px;
+          box-sizing: border-box;
+        "
+      >
+        About
+      </a>
+
+      <span class="version" style="width: 49%">v{{ version }}</span>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import {
-  EmptyFramesActions,
+  ChildlessFrameActions,
   RootFrameActions,
   SettingsMap,
   YesNo,
 } from '../../types/SettingsMap'
+import packageJSON from '../../../package.json'
 
 export default Vue.extend({
   name: 'SettingsComponent',
@@ -82,10 +104,12 @@ export default Vue.extend({
   },
   data() {
     return {
+      version: packageJSON.version,
       errorMsg: '',
-      EmptyFramesActions: {
-        [EmptyFramesActions.remove]: 'Remove (default)',
-        [EmptyFramesActions.turnIntoRectangle]: 'Turn into rectangle',
+      ChildlessFrameActions: {
+        [ChildlessFrameActions.auto]: 'Auto (default)',
+        [ChildlessFrameActions.remove]: 'Remove',
+        [ChildlessFrameActions.turnIntoRectangle]: 'Turn into rectangle',
       },
       RootFrameActions: {
         [RootFrameActions.leaveFrame]: 'Leave as Frame (default)',
@@ -102,8 +126,8 @@ export default Vue.extend({
     }
   },
   methods: {
-    toggleInfo(): void {
-      this.isInfoOpen = !this.isInfoOpen
+    openAbout(): void {
+      this.$emit('view:about')
     },
     onChange(): void {
       this.$emit('save:settings', this.settings as SettingsMap)
@@ -123,6 +147,25 @@ export default Vue.extend({
   overflow: hidden;
   box-sizing: border-box;
 }
+
+.settings-component .footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--footer-height);
+  z-index: 7;
+  box-sizing: border-box;
+  padding: 0 5px;
+}
+.settings-component .footer .version {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: var(--footer-height);
+  text-align: right;
+}
+
 .input-group {
   text-align: left;
   margin-top: 1em;
