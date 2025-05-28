@@ -2,14 +2,27 @@
 
 # Frames to Groups &mdash; Figma Plugin
 
-This is a [Figma](figma.com) plugin that provides an easy way to convert _Frames_ to _Groups_.
+> **⚠️ REPOSITORY STATUS: ARCHIVED**  
+> This repository is now archived as the plugin has moved to a premium model with a forever free trial.
+> New updates and features will be released in a private repository, but the plugin will remain available on the Figma Community with a generous free trial for all users.
+>
+> If you encounter any problems, please use the [/issues](https://github.com/maxmartynov/figma-plugin-frames-to-groups/issues) link to create a ticket.
+
+This is a [Figma](figma.com) plugin that converts Frames to Groups, preserving their visual properties
 
 ## How To Use
 
 Select layers and run the command `Convert Frames to Groups` and all
 _Frames_ inside the selected layers will be converted to _Groups_.
 
-Cases:
+## Features
+
+- Works recursively inside nested Frames
+- Preserves frame background colors and corner radii
+- Compatible with Lottie animations export
+- Includes Settings for fine-tuning behavior
+
+## Cases
 
 - If no layers are selected, then all frames on the page will be converted.
 - If you select a _Frame_, only the inner _Frames_ will be converted,
@@ -72,12 +85,7 @@ The idea initiator & artwork - [Filippos Protogeridis](https://github.com/protog
 
 ## Support
 
-Plugin creation fueled by coffee
-<br/><a title="Buy me a coffee" href="https://www.buymeacoffee.com/maxmartynov" target="_blank"><img src="img/bmc-button.svg" height="70"/></a>
-
-ETH: [0x4d3e86fa5aE38d8615b6da2F37C3E723050112C3](https://etherscan.io/address/0x4d3e86fa5aE38d8615b6da2F37C3E723050112C3)
-
-[<img src="img/di.gif" width="100"/>](img/demo.gif)
+**Pricing Model**: This plugin now uses a premium model with a forever free trial! All basic functionality remains accessible to everyone.
 
 ## License
 
